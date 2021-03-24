@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Matt Davis <maroda@rainbowq.io>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,13 +24,12 @@ import (
 // askCmd represents the ask command
 var askCmd = &cobra.Command{
 	Use:   "ask",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Ask QIO a question.",
+	Long: `QIO can interpret the phrase after 'ask'.
+If an answer matches the question, QIO will answer.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Examples:
+	- qio ask where is tech radar`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("ask called")
 	},

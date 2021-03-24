@@ -29,14 +29,18 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "qio",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "qio <command> <subject>",
+	Short: "The RainbowQ portal to your knowledge bases.",
+	Long: `QIO is the RainbowQ CLI interface.
+It communicates with a central store of data
+that provides a directory of services or values
+commonly needed but without good central storage.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+QIO can be configured locally to access its database,
+i.e. retrieve the latest copy of rainbow.toml, the default
+format for RainbowQ data.
+
+All your knowledgebase are belong to us.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
