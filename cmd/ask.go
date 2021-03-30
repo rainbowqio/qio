@@ -1,17 +1,5 @@
 /*
 Copyright © 2021 Matt Davis <maroda@rainbowq.io>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 package cmd
 
@@ -19,32 +7,35 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // askCmd represents the ask command
 var askCmd = &cobra.Command{
 	Use:   "ask",
 	Short: "Ask QIO a question.",
-	Long: `QIO can interpret the phrase after 'ask'.
-If an answer matches the question, QIO will answer.
-
-Examples:
-	- qio ask where is tech radar`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ask called")
+		// fmt.Println("ask called")
+		readRainbow()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(askCmd)
+}
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// askCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// askCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// So far, this will only read a single dot. 'meta.editor' will work in the yaml,
+// but 'meta.last.editor' will throw an error: While parsing config: (11, 1): unexpected token
+// In other words, tables with keys can be [meta.last]:editor but not [meta]:last.editor
+// This may actually be more readable.
+//
+// So the job then is to be able to search the config, which probably means... ???
+func readRainbow() {
+	if viper.IsSet("blameless.gcp.editor") {
+		editor := viper.Get("blameless.gcp.editor")
+		fmt.Println(editor)
+	} else {
+		editor := "ENOENT"
+		fmt.Println(editor)
+	}
 }
