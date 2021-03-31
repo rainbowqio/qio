@@ -4,6 +4,7 @@ Copyright © 2021 Matt Davis <maroda@rainbowq.io>
 package cmd
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -13,10 +14,16 @@ import (
 // askCmd represents the ask command
 var askCmd = &cobra.Command{
 	Use:   "ask",
-	Short: "Ask QIO a question.",
+	Short: "Ask QIO a question with: <almanac> <plug>",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 2 {
+			return errors.New("Usage: qio ask <almanac> <plug>")
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// fmt.Println("ask called")
-		readRainbow()
+		// Args: Almanac, Plug
+		readRainbow(args[0], args[1])
 	},
 }
 
@@ -24,18 +31,12 @@ func init() {
 	rootCmd.AddCommand(askCmd)
 }
 
-// So far, this will only read a single dot. 'meta.editor' will work in the yaml,
-// but 'meta.last.editor' will throw an error: While parsing config: (11, 1): unexpected token
-// In other words, tables with keys can be [meta.last]:editor but not [meta]:last.editor
-// This may actually be more readable.
-//
-// So the job then is to be able to search the config, which probably means... ???
-func readRainbow() {
-	if viper.IsSet("blameless.gcp.editor") {
-		editor := viper.Get("blameless.gcp.editor")
-		fmt.Println(editor)
+func readRainbow(almanac string, plug string) {
+	acPlug := almanac + "." + plug
+	if viper.IsSet(acPlug) {
+		found := viper.Get(acPlug)
+		fmt.Printf("%s ::: %s\n", acPlug, found)
 	} else {
-		editor := "ENOENT"
-		fmt.Println(editor)
+		fmt.Println("ENOENT")
 	}
 }
