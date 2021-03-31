@@ -18,11 +18,14 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "qio <command> <subject>",
-	Short: "The RainbowQ portal to your knowledge bases. All your knowledgebase are belong to us.",
+	Use:   "qio",
+	Short: "RainbowQ ::: all your knowledgebase are belong to us",
 	Example: `
-	# Display a key
-	$ qio ask <keyname>
+	::: Display a Plug within an Almanac
+	$ qio ask <almanac> <plug>
+
+	::: List what QIO knows
+	$ qio list
 	`,
 	Version: "0.0.1",
 }
