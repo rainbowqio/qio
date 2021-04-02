@@ -72,3 +72,7 @@ It won't be the result of a command, but the way to get a result.
 
 ## Write Data
 
+## TODO
+
+* Need to set this repo up so tag/releases are *built* and the binaries are directly downloadable.
+
