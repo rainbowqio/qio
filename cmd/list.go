@@ -19,7 +19,7 @@ var listCmd = &cobra.Command{
 	Short: "List what QIO knows",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
-			return errors.New("Usage: qio list")
+			return errors.New("Command does not take an argument.")
 		}
 		return nil
 	},
