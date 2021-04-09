@@ -12,7 +12,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
   IMAGE: qio
-  REGISTRY_HOSTNAME: gcr.io
+  RHOST: gcr.io
 
 
 jobs:
@@ -41,21 +41,19 @@ jobs:
     # Build the Docker image
     - name: Build
       run: |
-        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
-        echo $TAG
-        docker build -t "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
+        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
+        docker build -t "${IMAGE}_${TAG}" \
+          --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+          --build-arg GITHUB_REF="${GITHUB_REF}" .
 
     # Push the Docker image to Google Container Registry
     - name: Publish
       run: |
-        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
-        echo $TAG
-        docker push "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG"
-        docker tag "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
-        docker push "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":latest
+        export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
+        # First tag and push the version
+        docker tag "${IMAGE}_${TAG}" "$RHOST"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG"
+        docker push "$RHOST"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG"
+        # Then tag this as 'latest'
+        docker tag "$RHOST"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG" "$RHOST"/"$IMAGE":latest
+        docker push "$RHOST"/${{ secrets.GCP_PROJECT }}/"$IMAGE":latest
 
-
-
-        docker push gcr.io/blameless-185322/qio_0.0.3
