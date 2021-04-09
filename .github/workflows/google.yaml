@@ -52,6 +52,10 @@ jobs:
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
         echo $TAG
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG"
-        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+        docker push "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG"
+        docker tag "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+        docker push "$REGISTRY_HOSTNAME"/${{ secrets.GCP_PROJECT }}/"$IMAGE":latest
+
+
+
+        docker push gcr.io/blameless-185322/qio_0.0.3
