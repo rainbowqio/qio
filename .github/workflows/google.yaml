@@ -14,7 +14,6 @@ env:
   IMAGE: qio
   RHOST: gcr.io
   PROJECT: ${{ secrets.GCP_PROJECT }}
-  KEY: ${{ secrets.GCR_KEY }}
 
 
 jobs:
@@ -30,8 +29,8 @@ jobs:
     - uses: google-github-actions/setup-gcloud@master
       with:
         version: '290.0.1'
-        project_id: "${PROJECT}"
-        service_account_key: "${KEY}"
+        project_id: ${{ secrets.GCP_PROJECT }}
+        service_account_key: ${{ secrets.GCR_KEY }}
         export_default_credentials: true
 
     # Configure docker to use the gcloud command-line tool as a credential helper
@@ -52,7 +51,7 @@ jobs:
     - name: Publish
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
-        # First tag and push the local version
+        # First tag and push the version
         docker tag "${IMAGE}_${TAG}" "$RHOST"/"$PROJECT"/"$IMAGE":"$TAG"
         docker push "$RHOST"/"$PROJECT"/"$IMAGE":"$TAG"
         # Then tag this as 'latest'
