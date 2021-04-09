@@ -76,3 +76,13 @@ It won't be the result of a command, but the way to get a result.
 
 * Need to set this repo up so tag/releases are *built* and the binaries are directly downloadable.
 
+## Docker building
+
+Example build workflow:
+
+```shell
+docker build -t qio_0.0.3 .
+docker tag qio_0.0.3 gcr.io/blameless-185322/qio_0.0.3
+docker push gcr.io/blameless-185322/qio_0.0.3
+```
+
