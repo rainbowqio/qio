@@ -48,8 +48,8 @@ jobs:
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
         # First tag and push the version
-        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":"$TAG"
-        docker push "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":"$TAG"
+        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$GCLOUD_PROJECT"/"${IMAGE}-cli":"$TAG"
+        docker push "$RHOST"/"$GCLOUD_PROJECT"/"${IMAGE}-cli":"$TAG"
         # Then tag this as 'latest' and push
-        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":latest
-        docker push "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":latest
+        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$GCLOUD_PROJECT"/"${IMAGE}-cli":latest
+        docker push "$RHOST"/"$GCLOUD_PROJECT"/"${IMAGE}-cli":latest
