@@ -5,15 +5,11 @@ on:
     tags:
       - 0.0.*
 
-# Environment variables available to all jobs and steps in this workflow
-#  GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
-#  GKE_KEY: ${{ secrets.GKE_KEY }}
 env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
   IMAGE: qio
   RHOST: gcr.io
-  PROJECT: ${{ secrets.GCP_PROJECT }}
 
 
 jobs:
@@ -52,8 +48,8 @@ jobs:
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
         # First tag and push the version
-        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$PROJECT"/"$IMAGE":"$TAG"
-        docker push "$RHOST"/"$PROJECT"/"$IMAGE":"$TAG"
+        docker tag "${IMAGE}_${TAG}" "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":"$TAG"
+        docker push "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":"$TAG"
         # Then tag this as 'latest'
-        docker tag "$RHOST"/"$PROJECT"/"$IMAGE":"$TAG" "$RHOST"/"$IMAGE":latest
-        docker push "$RHOST"/"$PROJECT"/"$IMAGE":latest
+        docker tag "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":"$TAG" "$RHOST"/"$IMAGE":latest
+        docker push "$RHOST"/"$GCLOUD_PROJECT"/"$IMAGE":latest
