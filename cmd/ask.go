@@ -23,8 +23,10 @@ var askCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// Args: Almanac, Plug
+		listAlmanac()
 		readRainbow(args[0], args[1])
 	},
+	ValidArgs: []string{"craque", "mattic"},
 }
 
 func init() {
@@ -39,4 +41,32 @@ func readRainbow(almanac string, plug string) {
 	} else {
 		fmt.Println("ENOENT")
 	}
+}
+
+type Almanac struct {
+	Name string
+	Plug string
+}
+
+type Rainbow struct {
+	Almanacs []Almanac
+}
+
+var rainbow *Rainbow
+
+func listAlmanac() *Rainbow {
+	vas := viper.AllSettings()
+	// how do i extract the keys from this
+	almanacs := make([]Almanac, 0, len(vas))
+	for key, value := range vas {
+		val := value.(map[string]interface{})
+		fmt.Printf("%s ::: %s\n", key, val)
+		// append and return below
+		almanacs = append(almanacs, Almanac{
+			Name: key,
+			Plug: val["*"].(string),
+		})
+	}
+	rainbow = &Rainbow{almanacs}
+	return rainbow
 }
