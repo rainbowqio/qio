@@ -21,18 +21,24 @@ var askCmd = &cobra.Command{
 		}
 		return nil
 	},
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		if len(args) != 0 {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		// When [tab] [tab] is typed for completion, return a list of all Almanac topics in the Rainbow.
+		return listAlmanac(), cobra.ShellCompDirectiveNoFileComp
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// Args: Almanac, Plug
-		listAlmanac()
 		readRainbow(args[0], args[1])
 	},
-	ValidArgs: []string{"craque", "mattic"},
 }
 
 func init() {
 	rootCmd.AddCommand(askCmd)
 }
 
+// readRainbow ::: Get the value of `almanac.plug`.
 func readRainbow(almanac string, plug string) {
 	acPlug := almanac + "." + plug
 	if viper.IsSet(acPlug) {
@@ -43,30 +49,12 @@ func readRainbow(almanac string, plug string) {
 	}
 }
 
-type Almanac struct {
-	Name string
-	Plug string
-}
-
-type Rainbow struct {
-	Almanacs []Almanac
-}
-
-var rainbow *Rainbow
-
-func listAlmanac() *Rainbow {
+// listAlmanac ::: Display the top-level Almanac topics in the Rainbow.
+func listAlmanac() []string {
 	vas := viper.AllSettings()
-	// how do i extract the keys from this
-	almanacs := make([]Almanac, 0, len(vas))
-	for key, value := range vas {
-		val := value.(map[string]interface{})
-		fmt.Printf("%s ::: %s\n", key, val)
-		// append and return below
-		almanacs = append(almanacs, Almanac{
-			Name: key,
-			Plug: val["*"].(string),
-		})
+	var almanac_list []string
+	for key, _ := range vas {
+		almanac_list = append(almanac_list, key)
 	}
-	rainbow = &Rainbow{almanacs}
-	return rainbow
+	return almanac_list
 }

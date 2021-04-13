@@ -14,6 +14,8 @@ import (
 )
 
 // listCmd represents the list command
+// So far, this is a basic list. It can help debug too.
+// TODO: Allow for list args, e.g. `qio list almanacs`
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List what QIO knows",
@@ -32,6 +34,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 }
 
+// listRainbow ::: Display the entire Rainbow dataset as TOML.
 func listRainbow() string {
 	v := viper.AllSettings()
 	r, err := toml.Marshal(v)
