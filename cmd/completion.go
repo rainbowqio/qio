@@ -12,45 +12,56 @@ import (
 // completionCmd represents the completion command
 var completionCmd = &cobra.Command{
 	Use:   "completion [bash|zsh|fish|powershell]",
-	Short: "Generate completion script",
-	Long: `To load completions:
-
-Bash:
-
-  $ source <(yourprogram completion bash)
-
-  # To load completions for each session, execute once:
-  # Linux:
-  $ yourprogram completion bash > /etc/bash_completion.d/yourprogram
-  # macOS:
-  $ yourprogram completion bash > /usr/local/etc/bash_completion.d/yourprogram
+	Short: "Generate completion script for QIO",
+	Long: `QIO can complete some commands with a list of known Almanacs.
+To load completions in your shell of choice:
 
 Zsh:
 
-  # If shell completion is not already enabled in your environment,
-  # you will need to enable it.  You can execute the following once:
+  Load for each session for your user (only necessary once):
 
-  $ echo "autoload -U compinit; compinit" >> ~/.zshrc
+      $ echo "autoload -U compinit; compinit" >> ~/.zshrc
 
-  # To load completions for each session, execute once:
-  $ yourprogram completion zsh > "${fpath[1]}/_yourprogram"
+  Then export the script (only necessary once):
 
-  # You will need to start a new shell for this setup to take effect.
+      $ qio completion zsh > "${fpath[1]}/_qio"
+
+  Start a new shell for this to take effect.
+
+Bash:
+
+  AdHoc for current session only:
+
+      $ source <(qio completion bash)
+
+  Load for each session (only necessary once):
+  Linux:
+
+      $ qio completion bash > /etc/bash_completion.d/qio
+
+  macOS:
+
+  	$ qio completion bash > /usr/local/etc/bash_completion.d/qio
 
 fish:
 
-  $ yourprogram completion fish | source
+  # AdHoc for current session only:
 
-  # To load completions for each session, execute once:
-  $ yourprogram completion fish > ~/.config/fish/completions/yourprogram.fish
+  	$ qio completion fish | source
+
+  # Load for each session (only necessary once):
+
+  	$ qio completion fish > ~/.config/fish/completions/qio.fish
 
 PowerShell:
 
-  PS> yourprogram completion powershell | Out-String | Invoke-Expression
+  AdHoc for current session only:
 
-  # To load completions for every new session, run:
-  PS> yourprogram completion powershell > yourprogram.ps1
-  # and source this file from your PowerShell profile.
+  	PS> qio completion powershell | Out-String | Invoke-Expression
+
+  Load for each session (source this file from your PowerShell profile):
+
+  	PS> qio completion powershell > qio.ps1
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
