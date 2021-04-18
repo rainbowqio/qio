@@ -27,23 +27,19 @@ var askCmd = &cobra.Command{
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 		// When [tab] [tab] is typed for completion, return a list of all Almanac topics in the Rainbow.
-		return listAlmanac(), cobra.ShellCompDirectiveNoFileComp
+		return listAlmanacs(), cobra.ShellCompDirectiveNoFileComp
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// Args: Almanac, Plug
+		var answer string
 		switch len(args) {
 		case 1:
-			readRainbow(args[0], args[0])
+			// One Arg is taken as an Almanac search
+			_, _, answer = readRainbow(args[0], args[0])
 		default:
-			readRainbow(args[0], args[1])
+			// Two args are an Almanac + Plug search
+			_, _, answer = readRainbow(args[0], args[1])
 		}
-		/*
-			if len(args) == 1 {
-				readRainbow(args[0], args[0])
-			} else {
-				readRainbow(args[0], args[1])
-			}
-		*/
+		fmt.Println(answer)
 	},
 }
 
@@ -51,8 +47,21 @@ func init() {
 	rootCmd.AddCommand(askCmd)
 }
 
-// readRainbow ::: Get the value of `almanac.plug`.
-func readRainbow(almanac string, plug string) {
+// readRainbow ::: Get the value for the requested Almanac:Plug pair.
+//		A Rainbow is all the data.
+//		A Plug either contains or points to external sources of data.
+//		A query/question for the Rainbow looks at the value of a Plug.
+//
+//      When the args are equal, those are table names.
+//      We are showing a full Almanac.
+//
+//		When the args differ, the first is the Almanac,
+// 		  the second is the Plug, or key.
+//		This accepts any combination of compound key names,
+// 		  with the notion that it is only an Almanac if
+//		  it is a top-level TOML table name.
+//
+func readRainbow(almanac string, plug string) (string, string, string) {
 	var acPlug string
 
 	if almanac == plug {
@@ -60,25 +69,55 @@ func readRainbow(almanac string, plug string) {
 	} else {
 		acPlug = almanac + "." + plug
 	}
+	display, val, _ := askAlmanac(acPlug)
 
-	if viper.IsSet(acPlug) {
-		found := viper.Get(acPlug)
-		fmtfd, err := toml.Marshal(found)
-		// Note that 'dt = 2021-03-30T22:00:00Z' does not throw this error
-		// TODO: make this more data-aware?
-		if err != nil {
-			// The result cannot be marshalled, it isn't TOML so use the original result.
-			fmt.Printf("%s ::: %s\n", acPlug, found)
-		} else {
-			fmt.Printf("%s >>>\n%s\n", acPlug, fmtfd)
-		}
-	} else {
-		fmt.Println("ENOENT")
+	switch display {
+	case "Not Found":
+		return acPlug, display, "Not Found, does this Almanac exist?"
+	case "This Level":
+		fmt.Printf("Plugs found in %s:\n\n", acPlug)
+		fmt.Println(val)
+		return acPlug, display, ""
+	case "Plug Is":
+		//fmt.Println("Answer Found!")
+		return acPlug, display, val
+	default:
+		return acPlug, display, "default"
 	}
+
 }
 
-// listAlmanac ::: Display the top-level Almanac topics in the Rainbow.
-func listAlmanac() []string {
+// askAlmanac ::: Validates and retrieves a Rainbow Almanac:Plug (ACPlug)
+// 		No matching Almanac Plug, no data.
+//		There are no default ACPlugs.
+func askAlmanac(acp string) (string, string, error) {
+	// Validate first, then move on
+	if !viper.IsSet(acp) {
+		return "Not Found", "", errors.New("ENOENT")
+	}
+	found := viper.Get(acp)
+
+	var rVal string
+
+	// When the TOML library does not return an error,
+	// the source is marshalled and displayed as TOML.
+	fmtfd, err := toml.Marshal(found)
+	if err == nil {
+		// fmt.Printf("%s >>>\n%s\n", acp, fmtfd)
+		rVal = fmt.Sprint(fmtfd)
+		return "This Level", string(fmtfd), nil
+	}
+
+	// An unmarshallable source is the value of the plug.
+	// fmt.Printf("%s ::: %s\n", acp, found)
+	rVal = fmt.Sprint(found)
+	return "Plug Is", rVal, nil
+}
+
+// listAlmanacs ::: Display the top-level Almanac topics in the Rainbow.
+// 		An Almanac is a TOML table name. This list can be used to provide
+// 		shell tab completion or queries that require these top-level keys.
+func listAlmanacs() []string {
 	vas := viper.AllSettings()
 	var almanac_list []string
 	for key, _ := range vas {
