@@ -27,7 +27,6 @@ var rootCmd = &cobra.Command{
 	::: List what QIO knows
 	$ qio list
 	`,
-	Version: "0.0.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -44,7 +43,6 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().Bool("version", false, "print the version")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/qio/rainbow.toml)")
 }
 

@@ -31,9 +31,4 @@ var exportCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(exportCmd)
 	exportCmd.Flags().StringVarP(&format, "format", "f", "toml", "export format")
-	// If I wanted to write a new key called "format.type"
-	// 		and fill it in with the value of the flag:
-	// viper.BindPFlag("format.type", exportCmd.Flags().Lookup("format"))
-	//		or change the value of a known key (if '-f format' is used):
-	// viper.BindPFlag("meta.last.editor", exportCmd.Flags().Lookup("format"))
 }
