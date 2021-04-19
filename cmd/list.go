@@ -13,9 +13,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// listCmd represents the list command
-// So far, this is a basic list. It can help debug too.
-// TODO: Allow for list args, e.g. `qio list almanacs`
+// listCmd ::: Print the Rainbow
+// TODO: ouptut format flag
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List what QIO knows",
@@ -26,7 +25,11 @@ var listCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(listRainbow())
+		list, rerr := listRainbow(viper.AllSettings())
+		if rerr != nil {
+			log.Fatalf("Error on Return: %s", rerr)
+		}
+		fmt.Println(list)
 	},
 }
 
@@ -35,11 +38,11 @@ func init() {
 }
 
 // listRainbow ::: Display the entire Rainbow dataset as TOML.
-func listRainbow() string {
-	v := viper.AllSettings()
-	r, err := toml.Marshal(v)
+func listRainbow(as map[string]interface{}) (string, error) {
+	r, err := toml.Marshal(as)
 	if err != nil {
 		log.Fatalf("unable to marshal: %v", err)
+		return string(r), err
 	}
-	return string(r)
+	return string(r), nil
 }
