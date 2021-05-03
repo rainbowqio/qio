@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"bytes"
+	"sort"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 // TestReadRainbow ::: Tests the argument set that gets passed around.
@@ -62,6 +66,39 @@ func TestReadRainbow(t *testing.T) {
 			if display != "Not Found" {
 				t.Errorf("Content error, expected %s got %s", "Not Found", display)
 			}
+		}
+	}
+}
+
+// TestListAlmanacs ::: Check that the Almanac listing is working.
+func TestListAlmanacs(t *testing.T) {
+	// Test data is a one-Almanac Rainbow with two Plugs.
+	var testmap = []byte(`
+[meta.last]
+editor = "craque@craque.net"
+
+[status.last]
+color = "green"
+`)
+	var actual = []string{"meta", "status"}
+
+	// Use viper to access the value in this testmap
+	viper.SetConfigType("toml")
+	viper.ReadConfig(bytes.NewBuffer(testmap))
+
+	// Use viper to submit the config to listRainbow()
+	// which returns a TOML object.
+	list := listAlmanacs(viper.AllSettings())
+
+	if len(list) != len(actual) {
+		t.Errorf("Not equal size lists, expected %d got %d", len(actual), len(list))
+	}
+
+	sort.Strings(list)
+	sort.Strings(actual)
+	for i, v := range list {
+		if v != actual[i] {
+			t.Errorf("Entry mismatch, expected %s got %s", actual[i], v)
 		}
 	}
 }

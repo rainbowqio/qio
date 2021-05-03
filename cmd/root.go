@@ -21,12 +21,24 @@ var rootCmd = &cobra.Command{
 	Use:   "qio",
 	Short: "RainbowQ ::: all your knowledgebase are belong to us",
 	Example: `
-	::: Display a Plug within an Almanac
+	::: Display a Plug within an Almanac:
 	$ qio ask <almanac> <plug>
 
-	::: List what QIO knows
+	::: List what QIO knows:
 	$ qio list
+
+	::: QIO has randomizers! Toss a coin for HEADS or TAILS, get a token, or get a URL-encoded base64 token:
+	$ qio coin
+	$ qio coin -t
+	$ qio coin -b
+
+	::: Install shell completion (see 'qio completion --help' for more):
+	$ qio completion zsh > "${fpath[1]}/_qio"
+
+	::: Export known Rainbow to a local TOML file:
+	$ qio export
 	`,
+	Version: "0.1.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -43,6 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
+	rootCmd.PersistentFlags().Bool("version", false, "print the version")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/qio/rainbow.toml)")
 }
 

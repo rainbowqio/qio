@@ -52,19 +52,9 @@ fish:
   # Load for each session (only necessary once):
 
   	$ qio completion fish > ~/.config/fish/completions/qio.fish
-
-PowerShell:
-
-  AdHoc for current session only:
-
-  	PS> qio completion powershell | Out-String | Invoke-Expression
-
-  Load for each session (source this file from your PowerShell profile):
-
-  	PS> qio completion powershell > qio.ps1
 `,
 	DisableFlagsInUseLine: true,
-	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
+	ValidArgs:             []string{"bash", "zsh", "fish"},
 	Args:                  cobra.ExactValidArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		switch args[0] {
@@ -74,8 +64,6 @@ PowerShell:
 			cmd.Root().GenZshCompletion(os.Stdout)
 		case "fish":
 			cmd.Root().GenFishCompletion(os.Stdout, true)
-		case "powershell":
-			cmd.Root().GenPowerShellCompletionWithDesc(os.Stdout)
 		}
 	},
 }

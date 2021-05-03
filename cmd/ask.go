@@ -27,7 +27,7 @@ var askCmd = &cobra.Command{
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
 		// When [tab] [tab] is typed for completion, return a list of all Almanac topics in the Rainbow.
-		return listAlmanacs(), cobra.ShellCompDirectiveNoFileComp
+		return listAlmanacs(viper.AllSettings()), cobra.ShellCompDirectiveNoFileComp
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		var answer string
@@ -117,10 +117,9 @@ func askAlmanac(acp string) (string, string, error) {
 // listAlmanacs ::: Display the top-level Almanac topics in the Rainbow.
 // 		An Almanac is a TOML table name. This list can be used to provide
 // 		shell tab completion or queries that require these top-level keys.
-func listAlmanacs() []string {
-	vas := viper.AllSettings()
+func listAlmanacs(as map[string]interface{}) []string {
 	var almanac_list []string
-	for key, _ := range vas {
+	for key, _ := range as {
 		almanac_list = append(almanac_list, key)
 	}
 	return almanac_list
