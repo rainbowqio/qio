@@ -3,7 +3,7 @@ name: Build Qio CLI and push to GCR
 on:
   push:
     tags:
-      - 0.0.*
+      - 0.1.*
 
 env:
   GITHUB_SHA: ${{ github.sha }}
