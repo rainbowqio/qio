@@ -1,8 +1,10 @@
 # QIO
 
+[![Build Qio CLI and push to GCR](https://github.com/rainbowqio/qio/actions/workflows/google.yaml/badge.svg)](https://github.com/rainbowqio/qio/actions/workflows/google.yaml)
+
 Command Line Interface for RainbowQ
 
-Currently uses Cobra as a framework to load rainbow.toml, the default data format for the RainbowQ Almanac system.
+Uses Cobra as a framework to load _rainbow.toml_, the default data format for the RainbowQ Almanac system.
 
 ## RainbowQ
 
