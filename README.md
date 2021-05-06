@@ -120,3 +120,12 @@ Use "qio [command] --help" for more information about a command.
 
 Currently `rainbow.toml` is currated by the owner in its own repository.
 
+## Download
+
+Example setup of a Rainbow data source that lives on an internal GCP Storage Bucket along with a binary uploaded from this repo (this example is for Zsh, see qio completion --help for others):
+
+1. `gsutil cp gs://rainbowq/qio-macos /usr/local/bin/qio`
+2. `chmod 755 /usr/local/bin/qio`
+3. `qio completion zsh > "${fpath[1]}/_qio"`
+4. `gsutil cp gs://rainbowq/rainbow.toml ~/.config/qio/rainbow.toml` (you may need to create this directory)
+
