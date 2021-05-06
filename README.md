@@ -4,29 +4,28 @@
 
 Command Line Interface for RainbowQ
 
-Uses Cobra as a framework to load _rainbow.toml_, the default data format for the RainbowQ Almanac system.
+Uses Cobra / Viper as a framework to load _rainbow.toml_, the default data format for the RainbowQ Almanac system.
 
 ## RainbowQ
 
-The idea behind this app is a simple method of gathering currated resources of data.
+The power in RainbowQ is what data you put in it. It's a configuration for your sociotechnical company or project, a way to help quickly link humans at the sharp end with common threads of knowledge on the command line. Yep it's damn specific and I love using it, like one of those specialized tools that is finely tooled that helps fill a specific void. Things you need on the command line like:
 
-It is meant to be system agnostic, available as a Go application on many varieties of OS.
-
-The power in RainbowQ is what data you put in it.
-
-    * Shared bookmark list
+    * A shared bookmark list
     * Common commands for performing an action
     * Pointers to howto pages
     * Reading lists
     * Endpoints for monitoring
+    * Account numbers or unsecure tokens
 
-This data lives by default in `rainbow.toml`. Future versions plan to allow for remote storage (e.g. Consul). The data is not meant to contain secrets, instead it would contain pointers to where secrets for a particular Almanac are kept.
+The data is not meant to contain secrets, instead it would contain pointers to where secrets for a particular thing are kept.
+
+This data lives by default in `rainbow.toml`. Future versions plan to allow for remote storage (e.g. Consul) or queries to other types of data endpoints (e.g. Google API) to build Plugs.
+
+Plugs are the basic building block of the Almanac.
 
 ## Almanac System
 
-RainbowQ is a new way to think about data.
-
-It uses an Almanac: a collection of data around a particular topic that only exists within the context of its connections.
+RainbowQ organizes your data around the concept of an Almanac: a collection of data around a particular topic. This can become nested and complex if desired, or remain simple.
 
     * The Almanac structure in RainbowQ is analogous to a database table.
     * The native Almanac format is TOML.
@@ -44,12 +43,12 @@ The basic unit of knowledge in a RainbowQ database is the *Plug*.
 
     * Plugs are technically _key / value pairs._:
       * The _key_ is a concept.
-      * The _value_ is the pointer for the concept.
+      * The _value_ is the *pointer* for the concept.
 
 For instance, the `[company.corp]` *Almanac* contains the following *Plugs*:
 
     - editor = 'maroda@rainbowq.io'
-    - snailmail = '1234 ILoveYou Dr., Fullerton CA, 92831'
+    - snailmail = '1234 ILoveYou Dr., Hatachooe CA, 91111'
     - phone = '+1.714.123.4567'
     - account = 'RQ-BLS-0987'
 
@@ -70,21 +69,54 @@ That pointer can be *Hard* (a value, like a phone number) or *Soft* (a way to ge
 A functional piece of data, like a shell command, is considered a Soft Plug.
 It won't be the result of a command, but the way to get a result.
 
-## Display Data
+## Usage
+
+The `qio` command itself has no data. If run without an argument it will create its default database in `~/.config/qio/rainbow.toml`, but will not overwrite one if it already exists there. Below is the help to give some idea of how it works.
+
+```zsh
+>>> qio --help
+RainbowQ ::: all your knowledgebase are belong to us
+
+Usage:
+  qio [command]
+
+Examples:
+
+	::: Display a Plug within an Almanac:
+	$ qio ask <almanac> <plug>
+
+	::: List what QIO knows:
+	$ qio list
+
+	::: QIO has randomizers! Toss a coin for HEADS or TAILS, get a token, or get a URL-encoded base64 token:
+	$ qio coin
+	$ qio coin -t
+	$ qio coin -b
+
+	::: Install shell completion (see 'qio completion --help' for more):
+	$ qio completion zsh > "${fpath[1]}/_qio"
+
+	::: Export known Rainbow to a local TOML file:
+	$ qio export
+
+
+Available Commands:
+  ask         Ask QIO a question with: <almanac> <plug>
+  coin        Toss a coin. Use the '-t|--token' flag for a randomized 32 character token.
+  completion  Generate completion script for QIO
+  export      Export QIO knowledge
+  help        Help about any command
+  list        List what QIO knows
+
+Flags:
+      --config string   config file (default is $HOME/.config/qio/rainbow.toml)
+  -h, --help            help for qio
+      --version         print the version
+
+Use "qio [command] --help" for more information about a command.
+```
 
 ## Write Data
 
-## TODO
-
-* Need to set this repo up so tag/releases are *built* and the binaries are directly downloadable.
-
-## Docker building
-
-Example build workflow:
-
-```shell
-docker build -t qio_0.0.3 .
-docker tag qio_0.0.3 gcr.io/blameless-185322/qio_0.0.3
-docker push gcr.io/blameless-185322/qio_0.0.3
-```
+Currently `rainbow.toml` is currated by the owner in its own repository.
 
