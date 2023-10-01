@@ -6,7 +6,7 @@ Command Line Interface for RainbowQ
 
 Uses Cobra / Viper as a framework to load _rainbow.toml_, the default data format for the RainbowQ Almanac system.
 
-_(builds might be failing while the GCR endpoint is being worked out... another edit to test)_
+_(builds failing while some GCP stuff is straightened out)_
 
 ## RainbowQ
 
