@@ -3,14 +3,13 @@ name: Build Qio CLI and push to GCR
 on:
   push:
     tags:
-      - 0.1.*
+      - 0.*.*
 
 env:
   GITHUB_SHA: ${{ github.sha }}
   GITHUB_REF: ${{ github.ref }}
   IMAGE: qio
   RHOST: gcr.io
-
 
 jobs:
   setup-build-publish-deploy:

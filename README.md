@@ -6,18 +6,19 @@ Command Line Interface for RainbowQ
 
 Uses Cobra / Viper as a framework to load _rainbow.toml_, the default data format for the RainbowQ Almanac system.
 
+_(builds might be failing while the GCR endpoint is being worked out)_
+
 ## RainbowQ
 
 The power in RainbowQ is what data you put in it. It's a configuration for your sociotechnical company or project, a way to help quickly link humans at the sharp end with common threads of knowledge on the command line. Yep it's damn specific and I love using it, like one of those specialized tools that is finely tooled that helps fill a specific void. Things you need on the command line like:
 
-    * A shared bookmark list
-    * Common commands for performing an action
-    * Pointers to howto pages
-    * Reading lists
-    * Endpoints for monitoring
-    * Account numbers or unsecure tokens
-
-The data is not meant to contain secrets, instead it would contain pointers to where secrets for a particular thing are kept.
+* A shared bookmark list
+* Common commands for performing an action
+* Pointers to howto pages
+* Reading lists
+* Endpoints for monitoring
+* Account numbers or unsecure tokens
+  The data is not meant to contain secrets, instead it would contain pointers to where secrets for a particular thing are kept.
 
 This data lives by default in `rainbow.toml`. Future versions plan to allow for remote storage (e.g. Consul) or queries to other types of data endpoints (e.g. Google API) to build Plugs.
 
@@ -27,35 +28,32 @@ Plugs are the basic building block of the Almanac.
 
 RainbowQ organizes your data around the concept of an Almanac: a collection of data around a particular topic. This can become nested and complex if desired, or remain simple.
 
-    * The Almanac structure in RainbowQ is analogous to a database table.
-    * The native Almanac format is TOML.
-    * Almanac names can be simple or complex:
-      * [meta] or [meta.last] or [endpoint.prod]
-    * Keys in Almanacs are unique for that Almanac:
-      * [meta.last].editor is not the same as [customer.meta].editor
-      * Keys should remain simple and on lines by themselves.
-
-That's it. Almanacs can be simple or complex according to name and contain an arbitrary set of key / value pairs, known as Plugs.
+* The Almanac structure in RainbowQ is analogous to a database table.
+* The native Almanac format is TOML.
+* Almanac names can be simple or complex:
+  * [meta] or [meta.last] or [endpoint.prod]
+* Keys in Almanacs are unique for that Almanac:
+  * [meta.last].editor is not the same as [customer.meta].editor
+  * Keys should remain simple and on lines by themselves.
+    That's it. Almanacs can be simple or complex according to name and contain an arbitrary set of key / value pairs, known as Plugs.
 
 ## Plugs
 
 The basic unit of knowledge in a RainbowQ database is the *Plug*.
 
-    * Plugs are technically _key / value pairs._:
-      * The _key_ is a concept.
-      * The _value_ is the *pointer* for the concept.
+* Plugs are technically _key / value pairs._:
+  * The _key_ is a concept.
+  * The _value_ is the *pointer* for the concept.
+    For instance, the `[company.corp]` *Almanac* contains the following *Plugs*:
 
-For instance, the `[company.corp]` *Almanac* contains the following *Plugs*:
-
-    - editor = 'maroda@rainbowq.io'
-    - snailmail = '1234 ILoveYou Dr., Hatachooe CA, 91111'
-    - phone = '+1.714.123.4567'
-    - account = 'RQ-BLS-0987'
-
-There is an `editor` Plug that points to an email address.
-There is a `snailmail` Plug that points to a mailing address.
-A `phone` Plug points to a US phone number.
-The `account` Plug points to this customer's account number.
+- editor = 'maroda@rainbowq.io'
+- snailmail = '1234 ILoveYou Dr., Hatachooe CA, 91111'
+- phone = '+1.714.123.4567'
+- account = 'RQ-BLS-0987'
+  There is an `editor` Plug that points to an email address.
+  There is a `snailmail` Plug that points to a mailing address.
+  A `phone` Plug points to a US phone number.
+  The `account` Plug points to this customer's account number.
 
 RainbowQ does not portent to be the source of truth, but it points to sources of truth.
 
@@ -128,4 +126,3 @@ Example setup of a Rainbow data source that lives on an internal GCP Storage Buc
 2. `chmod 755 /usr/local/bin/qio`
 3. `qio completion zsh > "${fpath[1]}/_qio"`
 4. `gsutil cp gs://rainbowq/rainbow.toml ~/.config/qio/rainbow.toml` (you may need to create this directory)
-
