@@ -21,8 +21,8 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v3
 
-      - id: get-tag
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+      - name: "Get tag"
+        run: export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
 
       - id: auth
         uses: google-github-actions/auth@v1
@@ -40,7 +40,7 @@ jobs:
 
       - name: "Build image"
         run: |
-          docker build -t "${{ env.IMAGE }}_${{ steps.get-tag.outputs.short_ref }}" \
+          docker build -t "${{ env.IMAGE }}_${{ env.TAG }}" \
           --build-arg GITHUB_SHA=${{ env.GITHUB_SHA }} \
           --build-arg GITHUB_REF=${{ env.GITHUB_REF }} .
 
@@ -49,5 +49,5 @@ jobs:
         with:
           push: true
           tags: |
-            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:${{ steps.get-tag.outputs.short_ref }}
+            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:${{ env.TAG }}
             ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:latest
