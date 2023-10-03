@@ -1,57 +1,51 @@
-name: Build Qio CLI and push to GAR
+name: Build Qio and push to GAR
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
 
 env:
-  GITHUB_SHA: ${{ github.sha }}
+  PROJECT_ID: rainbowq
+  REGION: us-west2
+  GAR_LOCATION: us-west2-docker.pkg.dev/rainbowq/bows/
   GITHUB_REF: ${{ github.ref }}
+  GITHUB_SHA: ${{ github.sha }}
   IMAGE: qio
 
-jobs:
-  docker-release:
-    name: Tagged Docker release to Google Artifact Registry Repo
+job:
+  push-build-artifact:
+    name: Upload Docker release to Google Artifact Registry
     runs-on: ubuntu-latest
-    # only upload if the push is tagged
-    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     steps:
-      - id: checkout
-        name: Checkout
-        uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v3
 
-      - id: auth
-        name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v0
+      - id: "auth"
+        uses: google-github-actions/auth@v1
         with:
-          token_format: access_token
-          workload_identity_provider: projects/359816952063/locations/global/workloadIdentityPools/rainpool/providers/github-provider
-          service_account: rainbowqio@rainbowq.iam.gserviceaccount.com
-          access_token_lifetime: 300s
+          credentials_json: ${{ secrets.SA_KEY }}
 
-      - name: Login to Artifact Registry
-        uses: docker/login-action@v1
-        with:
-          registry: us-west2-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+      - name: "Set up Cloud SDK"
+        uses: google-github-actions/setup-gcloud@v1
 
-      - name: Get tag
-        id: get-tag
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
 
-      - id: docker-push-tagged
-        name: Tag Docker image and push to Google Artifact Registry
+      - name: "Docker auth"
+        run: |-
+          gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+
+      - name: "Build image"
+        run: |-
+          export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
+          docker build -t "${IMAGE}_${TAG}" \
+            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+            --build-arg GITHUB_REF="${GITHUB_REF}" .
+
+      - name: "Push image"
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: |
-             us-west2-docker.pkg.dev/359816952063/bows/${IMAGE}-cli:${{ steps.get-tag.outputs.short_ref }}
-             us-west2-docker.pkg.dev/359816952063/bows/${IMAGE}-cli:latest
-
+            ${GAR_LOCATION}${IMAGE}:${TAG}
+            ${GAR_LOCATION}${IMAGE}:latest
