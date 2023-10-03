@@ -19,13 +19,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: "Docker meta"
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            rainbowq/qio-cli
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
 
-      - name: "Get tag"
-        id: get-tag
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+            #      - name: "Get tag"
+            #        id: get-tag
+            #        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
       - id: auth
         uses: google-github-actions/auth@v1
@@ -35,22 +49,23 @@ jobs:
       - name: "Set up Cloud SDK"
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: "Use gcloud CLI"
-        run: gcloud info
-
       - name: "Docker auth"
         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
-      - name: "Build image"
-        run: |
-          docker build -t "${{ env.IMAGE }}_${{ steps.get-tag.outputs.short_ref }}" \
-          --build-arg GITHUB_SHA=${{ env.GITHUB_SHA }} \
-          --build-arg GITHUB_REF=${{ env.GITHUB_REF }} .
+          #      - name: "Build image"
+          #        run: |
+          #          docker build -t "${{ env.IMAGE }}_${{ steps.get-tag.outputs.short_ref }}" \
+          #          --build-arg GITHUB_SHA=${{ env.GITHUB_SHA }} \
+          #          --build-arg GITHUB_REF=${{ env.GITHUB_REF }} .
 
-      - name: "Push image"
+      - name: "Build and push"
         uses: docker/build-push-action@v5
         with:
-          push: true
-          tags: |
-            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:${{ steps.get-tag.outputs.short_ref }}
-            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:latest
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+            #          push: true
+            #          tags: |
+            #            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:${{ steps.get-tag.outputs.short_ref }}
+            #            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:latest
