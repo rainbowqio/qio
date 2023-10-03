@@ -12,7 +12,8 @@ env:
   GITHUB_REF: ${{ github.ref }}
   GITHUB_SHA: ${{ github.sha }}
   IMAGE: qio-cli
-  TOKEN: ${{ secrets.GHA_CLASSIC_TOKEN }}
+    #  TOKEN: ${{ secrets.GHA_CLASSIC_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GHA_TOKEN }}
 
 jobs:
   push-build-artifact:
@@ -22,7 +23,6 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
         with:
-          token: ${{ env.TOKEN }}
           fetch-depth: 0
       - name: "Docker meta"
         id: meta
