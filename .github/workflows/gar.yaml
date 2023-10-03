@@ -10,7 +10,7 @@ env:
   GAR_LOCATION: us-west2-docker.pkg.dev/rainbowq/bows/
   GITHUB_REF: ${{ github.ref }}
   GITHUB_SHA: ${{ github.sha }}
-  IMAGE: qio
+  IMAGE: qio-cli
 
 jobs:
   push-build-artifact:
@@ -29,23 +29,24 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: "Use gcloud CLI"
-        run: "gcloud info"
+        run: gcloud info
 
       - name: "Docker auth"
-        run: |-
-          gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: "Get tag"
+        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
       - name: "Build image"
         run: |-
-          export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'` && echo $TAG
-          docker build -t "${IMAGE}_${TAG}" \
-            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
-            --build-arg GITHUB_REF="${GITHUB_REF}" .
+          docker build -t ${{ env.IMAGE }}_${{ steps.get-tag.outputs.short_ref }} \
+          --build-arg GITHUB_SHA=${{ github.sha }} \
+          --build-arg GITHUB_REF=${{ github.ref }} .
 
       - name: "Push image"
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: |
-            ${GAR_LOCATION}${IMAGE}:${TAG}
-            ${GAR_LOCATION}${IMAGE}:latest
+          tags: |-
+            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:${{ steps.get-tag.outputs.short_ref }}
+            ${{ env.GAR_LOCATION }}${{ env.IMAGE }}:latest
