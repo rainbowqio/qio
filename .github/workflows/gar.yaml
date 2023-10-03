@@ -12,7 +12,7 @@ env:
   GITHUB_SHA: ${{ github.sha }}
   IMAGE: qio
 
-job:
+jobs:
   push-build-artifact:
     name: Upload Docker release to Google Artifact Registry
     runs-on: ubuntu-latest
