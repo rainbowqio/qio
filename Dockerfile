@@ -1,7 +1,7 @@
-FROM golang:alpine3.13
+FROM golang:alpine3.18
 LABEL vendor="RainbowQ"
 LABEL app="qio"
-LABEL version="0.1.11"
+LABEL version="0.2.1"
 WORKDIR /go/src/qio/
 COPY . .
 RUN go get .

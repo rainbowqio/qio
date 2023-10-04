@@ -38,7 +38,7 @@ var rootCmd = &cobra.Command{
 	::: Export known Rainbow to a local TOML file:
 	$ qio export
 	`,
-	Version: "0.1.11",
+	Version: "0.2.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

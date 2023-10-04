@@ -5,23 +5,11 @@ on:
     branches:
       - 'main'
 
-        #env:
-        #  GITHUB_REF: ${{ github.ref }}
-        #  GITHUB_SHA: ${{ github.sha }}
-        #  IMAGE: qio
-
 jobs:
   docker:
     name: "Build and Push"
     runs-on: ubuntu-latest
     steps:
-      #      - id: tokenDEBUG
-        #        run: |
-        #          if ! [[ -z "${{ secrets.GHA_TOKEN }}" ]]; then
-        #            echo ::set-output has_token=true
-        #          else
-        #            echo ::set-output has_token=false
-        #          fi
       - name: "Setup QEMU"
         uses: docker/setup-qemu-action@v3
 
