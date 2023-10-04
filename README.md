@@ -118,6 +118,14 @@ Currently `rainbow.toml` is currated by the owner in its own repository.
 
 ## Download
 
+# Docker Image
+
+To use the image from Docker Hub: `docker pull rainbowq/qio`
+
+The latest version will always be the one to use.
+
+# GCP Storage Bucket Example
+
 Example setup of a Rainbow data source that lives on an internal GCP Storage Bucket along with a binary uploaded from this repo (this example is for Zsh, see qio completion --help for others):
 
 1. `gsutil cp gs://rainbowq/qio-macos /usr/local/bin/qio`
