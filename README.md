@@ -1,6 +1,6 @@
 # QIO
 
-[![Build and Push Qio CLI to GAR](https://github.com/rainbowqio/qio/actions/workflows/gar.yaml/badge.svg)](https://github.com/rainbowqio/qio/actions/workflows/gar.yaml)
+[![Push to Docker Hub](https://github.com/rainbowqio/qio/actions/workflows/docker.yaml/badge.svg)](https://github.com/rainbowqio/qio/actions/workflows/docker.yaml)
 
 Command Line Interface for RainbowQ
 
