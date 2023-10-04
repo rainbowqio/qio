@@ -31,7 +31,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            rainbowq/qio
+            qio
           tags: |
             type=schedule
             type=ref,event=branch
