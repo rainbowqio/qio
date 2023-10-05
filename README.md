@@ -42,16 +42,21 @@ The basic unit of knowledge in a RainbowQ database is the *Plug*.
 * Plugs are technically _key / value pairs._:
   * The _key_ is a concept.
   * The _value_ is the *pointer* for the concept.
-    For instance, the `[company.corp]` *Almanac* contains the following *Plugs*:
 
-- editor = 'maroda@rainbowq.io'
-- snailmail = '1234 ILoveYou Dr., Hatachooe CA, 91111'
-- phone = '+1.714.123.4567'
-- account = 'RQ-BLS-0987'
-  There is an `editor` Plug that points to an email address.
-  There is a `snailmail` Plug that points to a mailing address.
-  A `phone` Plug points to a US phone number.
-  The `account` Plug points to this customer's account number.
+For instance, the `[company.corp]` *Almanac* contains the following *Plugs* (as it should appear in `rainbow.toml`):
+
+```
+[company.corp]
+editor = 'frank.zappa@org.io'
+snailmail = '1234 ILoveYou Dr., Hatachooe CA, 91111'
+phone = '+1.714.123.4567'
+account = 'RQ-BLS-0987'
+```
+
+- There is an `editor` Plug that points to an email address.
+- There is a `snailmail` Plug that points to a mailing address.
+- A `phone` Plug points to a US phone number.
+- The `account` Plug points to this customer's account number.
 
 RainbowQ does not portent to be the source of truth, but it points to sources of truth.
 
@@ -115,6 +120,9 @@ Use "qio [command] --help" for more information about a command.
 ## Write Data
 
 Currently `rainbow.toml` is currated by the owner in its own repository.
+
+See [rq-generic](https://github.com/rainbowqio/rq-generic) for a skeleton.
+
 
 ## Download
 
