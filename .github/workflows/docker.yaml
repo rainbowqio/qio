@@ -2,7 +2,7 @@ name: Push to Docker Hub
 
 on:
   push:
-    tags: [ v* ]
+    tags: [ * ]
     #    branches:
     #      - 'main'
 
