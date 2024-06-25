@@ -3,7 +3,8 @@ name: Push to Docker Hub
 on:
   push:
     tags:
-      - 0.*
+      - v0.*
+      - v1.*
 
 jobs:
   docker:
